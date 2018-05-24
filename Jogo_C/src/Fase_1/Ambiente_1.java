@@ -224,7 +224,7 @@ public class Ambiente_1 {
 		frame.getContentPane().add(comandos);
 		
 		JLabel lblFundo = new JLabel("");
-		lblFundo.setIcon(new ImageIcon("C:\\Users\\Rafael\\Documents\\Programas_Java\\Jogo_C\\imagens\\Fundo_2.png"));
+		lblFundo.setIcon(new ImageIcon(Ambiente_1.class.getResource("/Fundo_2.png")));
 		lblFundo.setOpaque(false);
 		lblFundo.setBackground(Color.LIGHT_GRAY);
 		lblFundo.setBounds(241, 132, 541, 560);
@@ -240,14 +240,53 @@ public class Ambiente_1 {
 		erros.setBounds(792, 597, 550, 89);
 		frame.getContentPane().add(erros);
 		
+		JLabel lblLogo = new JLabel("");
+		ImageIcon icone2 = new ImageIcon("C:\\Users\\Teo\\Pictures\\logo.jpg");
+		icone2.setImage(icone2.getImage().getScaledInstance(170,64, 100));
+		
+		btnOK = new JButton("OK");
+		btnOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnOK.setVisible(false);
+				new Thread(msg1).start();
+			}
+		});
+		btnOK.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		btnOK.setBackground(Color.YELLOW);
+		btnOK.setBounds(1247, 40, 70, 50);
+		frame.getContentPane().add(btnOK);
+		
+		lblMensagem = new JLabel("<html>Estou precisando de ajuda. <br>Que bom que voc\u00EA está aqui para me ajudar!</html>");
+		lblMensagem.setForeground(Color.WHITE);
+		lblMensagem.setFont(new Font("Tahoma", Font.PLAIN, 32));
+		lblMensagem.setBounds(507, 27, 846, 78);
+		frame.getContentPane().add(lblMensagem);
+		lblLogo.setIcon(icone2);
+		lblLogo.setBounds(30, 10, 170, 64);
+		frame.getContentPane().add(lblLogo);
+		
+		JLabel lblRosto = new JLabel("");
+		ImageIcon icone3 = new ImageIcon("C:\\Users\\Teo\\Pictures\\robo_rosto.png");
+		icone3.setImage(icone3.getImage().getScaledInstance(124,111, 100));
+		lblRosto.setIcon(icone3);	
+		lblRosto.setBounds(300, 13, 124, 111);
+		frame.getContentPane().add(lblRosto);
+		
+		JLabel lblBalao = new JLabel("");
+		ImageIcon icone4 = new ImageIcon("C:\\Users\\Teo\\Pictures\\balao.png");
+		icone4.setImage(icone4.getImage().getScaledInstance(905,111, 100));
+		lblBalao.setIcon(icone4);	
+		lblBalao.setBounds(437, 10, 905, 111);
+		frame.getContentPane().add(lblBalao);
+		
 	//	Image image = new ImageIcon("C:\\Users\\Rafael\\Desktop\\Fundo.png"); // transform it
 
 //		controleDosBlocos.zerarMatrizPosicaoBlocos();
 		
 		atualizarBlocos(1);
 		
-		
 		new Thread(tarefa1).start();
+		controleOpcoes.desativaOpcoes();
 		
 //----Campos para inserção-----------------------------------------------
 //-----------------------------------------------------------------------		
@@ -542,5 +581,64 @@ public class Ambiente_1 {
 		}
 		}
 		};
+	private JLabel lblMensagem;
+	
+	public Runnable msg1 = new Runnable() {
+		
+		@Override
+		public void run() {	
+			
+			try {
+				controleOpcoes.ativaOpcoes();
+				lblMensagem.setText("<html>Arraste o primeiro bloco<br> para a possição em destaque.</html>");
+				Thread.sleep(2000);
+				controleOpcoes.alterarCorOpcao("B0");
+				controleDosBlocos.alterarCorBloco("11"); //linha um coluna 1 
+				
+				JLabel opcoes = controleOpcoes.verificarEncaixe1("B0");
+				JLabel blocos = controleDosBlocos.verificarEncaixe2("11");
+				while(!((opcoes.getX() == blocos.getX()) && (opcoes.getY() == blocos.getY()))){
+					Thread.sleep(500);
+				}
+				//lblMensagem.setText("<html>Dica: o include ....</html>");
+
+				new Thread(msg2).start();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	};
+public Runnable msg2 = new Runnable() {
+		
+		@Override
+		public void run() {	
+			
+			try {
+				//Thread.sleep(500);
+				lblMensagem.setText("<html>Parabéns! Agora me ajude a encontrar <br>a cobinação correta deste comando.</html>");
+				Thread.sleep(3000);
+				controleDosBlocos.alterarCorBloco("12");
+				JLabel opcoes = controleOpcoes.verificarEncaixe1("B1");
+				JLabel blocos = controleDosBlocos.verificarEncaixe2("12");
+				Thread.sleep(2000);
+				while(!((opcoes.getX() == blocos.getX()) && (opcoes.getY() == blocos.getY()))){
+					lblMensagem.setText("<html>Ops! Testei aqui, mas não funcionou!!!</html>");
+					Thread.sleep(1500);
+					lblMensagem.setText("<html>Agora me ajude a encontrar <br>a combinação correta deste comando.</html>");
+					Thread.sleep(3000);
+				}
+				lblMensagem.setText("<html>Parabéns! Nós formamos uma bela dupla.<br>Agora vamos criar a estrutura principal main().</html>");
+				controleDosBlocos.alterarCorBloco("21");
+				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	};
+	private JButton btnOK;
 }
 	

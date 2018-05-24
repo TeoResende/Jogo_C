@@ -155,12 +155,36 @@ public class ControleBlocos {
 					bloco.setVisible(false);
 					break;
 				case POSICAO_CORRETA:
-					
+				
 					break;
 				case POSICAO_ERRADA:
 
 					break;
 			}
+		}
+		public void alterarCorOpcao(String nome){
+			for(JLabel bloco: this.referenciaOpcoes.keySet())
+			{
+				if(bloco.getName().equals(nome))
+				{
+					bloco.setBackground(Color.ORANGE);
+					bloco.setOpaque(true);
+					bloco.setVisible(true);
+				}	
+			}			
+		}
+		
+		public void alterarCorBloco(String nome){
+			for(JLabel bloco: this.referenciaBlocos.keySet())
+			{
+				if(bloco.getName().equals(nome))
+				{
+					this.referenciaBlocos.put(bloco, EstadosBlocos.POSICAO_CORRETA);
+					bloco.setBackground(Color.ORANGE);
+					bloco.setOpaque(true);
+					bloco.setVisible(true);
+				}	
+			}			
 		}
 		
 		public void atualizarEstadoDosBlocos(JLabel label){
@@ -240,6 +264,29 @@ public class ControleBlocos {
 			}
 			return false;
 		}
+		
+		public JLabel verificarEncaixe1(String opcao)
+		{
+			for(JLabel opcoes: this.referenciaOpcoes.keySet())
+			{
+				if(opcoes.getName().equals(opcao)) {
+					return opcoes;
+				}
+			}
+			return null;
+		}
+		
+		public JLabel verificarEncaixe2(String bloco)
+		{
+			for(JLabel blocos: this.referenciaBlocos.keySet())
+			{
+				if(blocos.getName().equals(bloco)) {
+					return blocos;
+				}
+			}
+			return null;
+		}
+		
 	
 		public String verificarResposta(JLabel blocoOpcao)
 		{
@@ -303,5 +350,20 @@ public class ControleBlocos {
 				}
 			}
 			return true;
+		}
+		
+		
+		public void desativaOpcoes() {
+			for(JLabel bloco: this.referenciaOpcoes.keySet())
+			{
+				bloco.setVisible(false);
+			}
+		}
+		
+		public void ativaOpcoes() {
+			for(JLabel bloco: this.referenciaOpcoes.keySet())
+			{
+				bloco.setVisible(true);
+			}
 		}
 }

@@ -12,7 +12,7 @@ public class Conexao {
 	public static Connection getConexao(){
 		Connection conexao = null;
 			try {
-				conexao = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/jogoc","root","root");
+				conexao = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3307/jogoc","root","root");
 																  // 127.0.0.1   192.168.10.32
 				System.out.println("Banco Conectado!");
 			} catch (SQLException e) {
