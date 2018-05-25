@@ -43,7 +43,8 @@ import java.awt.event.MouseWheelEvent;
 import javax.swing.ImageIcon;
 
 public class Ambiente_1 {
-	
+	String blocobloco;
+	boolean movendo = false;
 	ResultSet dados_programa = new Conexao().consultar();
 	String   matrizResposta[][]       = new String[16][6];
 	int direcao = 0;
@@ -66,6 +67,8 @@ public class Ambiente_1 {
 //	private ActionListener acaoBotoes;
 	
 	MouseAdapter mExited;
+	MouseAdapter mRelease;
+	MouseAdapter mMoved;
 	MouseAdapter mEntered;
 	MouseAdapter mClicked;
 	MouseMotionListener mDragged;
@@ -113,11 +116,20 @@ public class Ambiente_1 {
 	
 		
 //---------------------------------------Eventos Blocos--------------------------------------
-	
+		mMoved = new MouseAdapter() {
+			public void mouseMoved(MouseEvent e) {
+			}
+		};
+		
+		mRelease = new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+			}
+		}; 
+		
 		mExited = new MouseAdapter() {
 			public void mouseExited(MouseEvent e) {
-				((JLabel)e.getSource()).setBackground(Color.WHITE);
 				
+				((JLabel)e.getSource()).setBackground(Color.WHITE);
 					if(!controleDosBlocos.verificarEncaixe((JLabel)e.getSource())
 				  	    || controleOpcoes.verificarOpcao((JLabel)e.getSource()))
 					{
@@ -137,7 +149,9 @@ public class Ambiente_1 {
 
 		mDragged = new MouseMotionAdapter() {
 			public void mouseDragged(MouseEvent e) {
-
+				
+				movendo = controleDosBlocos.verificaSeTentouEncaixe(blocobloco,(JLabel)e.getSource());
+				
 				controleOpcoes.atualizarPosicaoBloco(((JLabel)e.getSource()));
 				controleDosBlocos.atualizarEstadoDosBlocos(((JLabel)e.getSource()));
 				blocoAtual = ((JLabel)e.getSource()).getName();
@@ -172,9 +186,11 @@ public class Ambiente_1 {
 		
 		criarBlocos(75,5);
 		
-		JButton btnPlay = new JButton("EXECUTAR");
+		btnPlay = new JButton("EXECUTAR");
 		btnPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				lblMensagem2.setVisible(true);
+				lblBalao2.setVisible(true);
 				testeResposta();
 			}
 		});
@@ -234,6 +250,26 @@ public class Ambiente_1 {
 		cenario.setBackground(Color.GRAY);
 		cenario.setBounds(792, 137, 550, 450);
 		frame.getContentPane().add(cenario);
+		cenario.setLayout(null);
+		
+		lblMensagem2 = new JLabel("Mundo SENAI");
+		lblMensagem2.setVisible(false);
+		lblMensagem2.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblMensagem2.setBounds(334, 69, 204, 35);
+		cenario.add(lblMensagem2);
+		
+		lblBalao2 = new JLabel("");
+		lblBalao2.setVisible(false);
+		ImageIcon icone5 = new ImageIcon("C:\\Users\\Teo\\Pictures\\balao.png");
+		icone5.setImage(icone5.getImage().getScaledInstance(233,62, 100));
+		lblBalao2.setIcon(icone5);
+		lblBalao2.setBounds(305, 54, 233, 62);
+		cenario.add(lblBalao2);
+		
+		JLabel lblRobo = new JLabel("");
+		lblRobo.setIcon(new ImageIcon("C:\\Users\\Teo\\Pictures\\robozinho.gif"));
+		lblRobo.setBounds(12, 13, 526, 424);
+		cenario.add(lblRobo);
 		
 		JPanel erros = new JPanel();
 		erros.setBackground(Color.GRAY);
@@ -242,9 +278,14 @@ public class Ambiente_1 {
 		
 		JLabel lblLogo = new JLabel("");
 		ImageIcon icone2 = new ImageIcon("C:\\Users\\Teo\\Pictures\\logo.jpg");
-		icone2.setImage(icone2.getImage().getScaledInstance(170,64, 100));
+		icone2.setImage(icone2.getImage().getScaledInstance(200,80, 100));
+		lblLogo.setIcon(icone2);
+		lblLogo.setBounds(30, 30, 200, 80);
+		frame.getContentPane().add(lblLogo);
 		
-		btnOK = new JButton("OK");
+		btnOK = new JButton("");
+		btnOK.setOpaque(false);
+		btnOK.setIcon(new ImageIcon("C:\\Users\\Teo\\Pictures\\icon3.png"));
 		btnOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				btnOK.setVisible(false);
@@ -253,7 +294,7 @@ public class Ambiente_1 {
 		});
 		btnOK.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		btnOK.setBackground(Color.YELLOW);
-		btnOK.setBounds(1247, 40, 70, 50);
+		btnOK.setBounds(1220, 30, 87, 80);
 		frame.getContentPane().add(btnOK);
 		
 		lblMensagem = new JLabel("<html>Estou precisando de ajuda. <br>Que bom que voc\u00EA está aqui para me ajudar!</html>");
@@ -261,9 +302,7 @@ public class Ambiente_1 {
 		lblMensagem.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		lblMensagem.setBounds(507, 27, 846, 78);
 		frame.getContentPane().add(lblMensagem);
-		lblLogo.setIcon(icone2);
-		lblLogo.setBounds(30, 10, 170, 64);
-		frame.getContentPane().add(lblLogo);
+		
 		
 		JLabel lblRosto = new JLabel("");
 		ImageIcon icone3 = new ImageIcon("C:\\Users\\Teo\\Pictures\\robo_rosto.png");
@@ -482,7 +521,7 @@ public class Ambiente_1 {
 					label.setOpaque(true);
 					label.setFont(new Font("Courier New", Font.BOLD, 15));
 					label.setBackground(Color.WHITE);
-					label.setBounds(posX, posY, 147, 28);
+					label.setBounds(posX, posY, 180, 28);
 					frame.getContentPane().add(label);
 					controleOpcoes.adicionarOpcoes(label);
 					
@@ -514,7 +553,7 @@ public class Ambiente_1 {
 			label.setOpaque(false);
 			label.setFont(new Font("Courier New", Font.BOLD, 15));
 			label.setBackground(Color.LIGHT_GRAY);
-			label.setBounds(posX, posY, 147, 28);
+			label.setBounds(posX, posY, 180, 28);
 			frame.getContentPane().add(label);
 			controleDosBlocos.adicionarBloco(label);
 			
@@ -524,7 +563,7 @@ public class Ambiente_1 {
 			}
 			else
 			{
-				posX += 150;
+				posX += 183;
 			}
 			
 		}
@@ -616,22 +655,111 @@ public Runnable msg2 = new Runnable() {
 		public void run() {	
 			
 			try {
-				//Thread.sleep(500);
+				blocobloco = "12";
 				lblMensagem.setText("<html>Parabéns! Agora me ajude a encontrar <br>a cobinação correta deste comando.</html>");
-				Thread.sleep(3000);
-				controleDosBlocos.alterarCorBloco("12");
+				controleDosBlocos.alterarCorBloco(blocobloco);
 				JLabel opcoes = controleOpcoes.verificarEncaixe1("B1");
-				JLabel blocos = controleDosBlocos.verificarEncaixe2("12");
-				Thread.sleep(2000);
+				JLabel blocos = controleDosBlocos.verificarEncaixe2(blocobloco);
+				Thread.sleep(4000);
 				while(!((opcoes.getX() == blocos.getX()) && (opcoes.getY() == blocos.getY()))){
-					lblMensagem.setText("<html>Ops! Testei aqui, mas não funcionou!!!</html>");
-					Thread.sleep(1500);
-					lblMensagem.setText("<html>Agora me ajude a encontrar <br>a combinação correta deste comando.</html>");
-					Thread.sleep(3000);
+					if(movendo==false) {
+						lblMensagem.setText("<html>Agora me ajude a encontrar <br>a combinação correta deste comando.</html>");
+						Thread.sleep(1000);
+					}else {
+						lblMensagem.setText("<html>Ops! Testei aqui, mas não funcionou!!!</html>");
+						Thread.sleep(1000);
+					}
 				}
+				movendo = false;
+//--------------------------------------------------------------------------------------------------
+				blocobloco = "21";
 				lblMensagem.setText("<html>Parabéns! Nós formamos uma bela dupla.<br>Agora vamos criar a estrutura principal main().</html>");
-				controleDosBlocos.alterarCorBloco("21");
-				
+				controleDosBlocos.alterarCorBloco(blocobloco);
+				JLabel opcoes1 = controleOpcoes.verificarEncaixe1("B2");
+				JLabel blocos1 = controleDosBlocos.verificarEncaixe2(blocobloco);
+				Thread.sleep(4000);
+				while(!((opcoes1.getX() == blocos1.getX()) && (opcoes1.getY() == blocos1.getY()))){
+					if(movendo==false) {
+						lblMensagem.setText("<html>Agora vamos criar a estrutura principal main()</html>");
+						Thread.sleep(1000);
+					}else {
+						lblMensagem.setText("<html>Ops! Testei aqui, mas não funcionou!!!</html>");
+						Thread.sleep(1000);
+					}
+				}
+				movendo = false;
+//-----------------------------------------------------------------------------------------------------
+				blocobloco = "31";
+				lblMensagem.setText("<html>Muito bem conseguimos criar o início de nosso programa.<br> Vamos agora apontar onde começa a nossa solução. </html>");
+				controleDosBlocos.alterarCorBloco(blocobloco);
+				JLabel opcoes2 = controleOpcoes.verificarEncaixe1("B3");
+				JLabel blocos2 = controleDosBlocos.verificarEncaixe2(blocobloco);
+				Thread.sleep(4000);
+				while(!((opcoes2.getX() == blocos2.getX()) && (opcoes2.getY() == blocos2.getY()))){
+					if(movendo==false) {
+						lblMensagem.setText("<html>Vamos agora apontar onde começa a nossa solução. \"{\"</html>");
+						Thread.sleep(1000);
+					}else {
+						lblMensagem.setText("<html>Ops! Testei aqui, mas não funcionou!!!</html>");
+						Thread.sleep(1000);
+					}
+				}
+				movendo = false;
+				//-----------------------------------------------------------------------------------------------------
+				blocobloco = "41";
+				lblMensagem.setText("<html>Agora vamos aprender o comando que fara nosso robo falar</html>");
+				controleDosBlocos.alterarCorBloco(blocobloco);
+				JLabel opcoes3 = controleOpcoes.verificarEncaixe1("B4");
+				JLabel blocos3 = controleDosBlocos.verificarEncaixe2(blocobloco);
+				Thread.sleep(4000);
+				while(!((opcoes3.getX() == blocos3.getX()) && (opcoes3.getY() == blocos3.getY()))){
+					if(movendo==false) {
+						lblMensagem.setText("<html>Para fazer nosso robo falar \"printf\"<br> print = impressão / f = formatar </html>");
+						Thread.sleep(1000);
+					}else {
+						lblMensagem.setText("<html>Ops! Testei aqui, mas não funcionou!!!</html>");
+						Thread.sleep(1000);
+					}
+				}
+				movendo = false;
+				//-----------------------------------------------------------------------------------------------------
+				blocobloco = "42";
+				lblMensagem.setText("<html>Dentro de um par de parentese () <br> Temos que colocar a mensagem que o robo pronunciara</html>");
+				controleDosBlocos.alterarCorBloco(blocobloco);
+				JLabel opcoes4 = controleOpcoes.verificarEncaixe1("B5");
+				JLabel blocos4 = controleDosBlocos.verificarEncaixe2(blocobloco);
+				Thread.sleep(4000);
+				while(!((opcoes4.getX() == blocos4.getX()) && (opcoes4.getY() == blocos4.getY()))){
+					if(movendo==false) {
+						lblMensagem.setText("<html>Ajude-me a colocar uma mensagem <br>Para que nosso robo fale \"Mundo SENAI\"</html>");
+						Thread.sleep(1000);
+					}else {
+						lblMensagem.setText("<html>Ops! Testei aqui, mas não funcionou!!!</html>");
+						Thread.sleep(1000);
+					}
+				}
+				movendo = false;
+				//-----------------------------------------------------------------------------------------------------
+				blocobloco = "51";
+				lblMensagem.setText("<html>Muito bem, agora precisamos finalizar nosso bloco \"main()<br>{\"</html>");
+				controleDosBlocos.alterarCorBloco(blocobloco);
+				JLabel opcoes5 = controleOpcoes.verificarEncaixe1("B6");
+				JLabel blocos5 = controleDosBlocos.verificarEncaixe2(blocobloco);
+				Thread.sleep(4000);
+				while(!((opcoes5.getX() == blocos5.getX()) && (opcoes5.getY() == blocos5.getY()))){
+					if(movendo==false) {
+						lblMensagem.setText("<html>Agora vamos apontar o fim do nosso main(){ \"}\"</html>");
+						Thread.sleep(1000);
+					}else {
+						lblMensagem.setText("<html>Ops! Testei aqui, mas não funcionou!!!</html>");
+						Thread.sleep(1000);
+					}
+				}
+				movendo = false;
+				//-----------------------------------------------------------------------------------------------------
+				lblMensagem.setText("<html>Muito bem, agora vamos testar nossa solução<br>Clique no botao <b>\"Executar\"</b> em destaque.</html>");
+				btnPlay.setOpaque(true);
+				btnPlay.setBackground(Color.ORANGE);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -640,5 +768,8 @@ public Runnable msg2 = new Runnable() {
 		}
 	};
 	private JButton btnOK;
+	private JButton btnPlay;
+	private JLabel lblBalao2;
+	private JLabel lblMensagem2;
 }
 	

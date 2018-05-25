@@ -230,7 +230,7 @@ public class ControleBlocos {
 				{
 					int y = 150;
 					int x = 30;
-					int largura = 147;
+					int largura = 180;
 					int espaco = 40;
 					
 					switch(bloco.getName())
@@ -287,6 +287,22 @@ public class ControleBlocos {
 			return null;
 		}
 		
+		public boolean verificaSeTentouEncaixe(String bloco,JLabel opcoes) {
+			boolean r = false;
+			for(JLabel blocos: this.referenciaBlocos.keySet())
+			{
+				if(blocos.getName().equals(bloco)) {
+					if((opcoes.getX() == blocos.getX()) && (opcoes.getY() == blocos.getY())) {
+						r =  true;
+						break;						
+					}else {
+						r = false;
+					}
+				}
+				
+			}
+			return r;
+		}
 	
 		public String verificarResposta(JLabel blocoOpcao)
 		{
